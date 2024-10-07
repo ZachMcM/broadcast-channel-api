@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { BroadcastMessage } from "./types";
+import { BroadcastMessage } from "../types";
 
 export default function PageOne() {
   const broadcastChannel = new BroadcastChannel("test_channel");
@@ -11,6 +11,7 @@ export default function PageOne() {
   useEffect(() => {
     broadcastChannel.onmessage = (event) => {
       const message = event.data as BroadcastMessage;
+      console.log(message);
       setMessages((prevMessages) => [...prevMessages, message]);
     };
   }, []);
@@ -20,7 +21,7 @@ export default function PageOne() {
     setInput("")
     broadcastChannel.postMessage({
       content,
-      origin: "index",
+      origin: "page_two",
     });
   }
 
@@ -31,7 +32,7 @@ export default function PageOne() {
           <h1 className="font-bold text-2xl">Incoming Messages</h1>
           <div className="flex flex-col gap-2">
             {messages
-              .filter((message) => message.origin === "page_two")
+              .filter((message) => message.origin === "index")
               .map((message) => (
                 <div key={Math.random()} className="p-2">
                   <p className="font-medium">{message.content}</p>
@@ -43,7 +44,7 @@ export default function PageOne() {
           <h1 className="font-bold text-2xl">Outgoing Messages</h1>
           <div className="flex flex-col gap-2">
             {messages
-              .filter((message) => message.origin === "index")
+              .filter((message) => message.origin === "page_two")
               .map((message) => (
                 <div key={Math.random()} className="p-2">
                   <p className="font-medium">{message.content}</p>
